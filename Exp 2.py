@@ -14,6 +14,13 @@
 import numpy as np
 import pandas as pd
 
+data = {
+    'Name': ['A', 'B', 'C', 'D', 'E'],
+    'Math': [90, 85, np.nan, 200, 76],
+    'Sci': [88, np.nan, 92, 95, 500],
+    'Att': [80, 85, 90, np.nan, 95]
+}
+
 df['Math'] = df['Math'].fillna(df['Math'].mean())
 df['Sci'] = df['Sci'].fillna(df['Sci'].mean())
 df['Att'] = df['Att'].fillna(df['Att'].mean())

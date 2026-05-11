@@ -14,22 +14,33 @@
 import numpy as np
 import pandas as pd
 
-data = {'Name':[],
-'Math':[].
-'Sci':[],
-'Att':[]}
-df = pd.DataFrame(data)
-print(df)
-
-df.info()
-
-df['Math'] = df['Math'].fillna(df['Math'].mean()) 
+df['Math'] = df['Math'].fillna(df['Math'].mean())
 df['Sci'] = df['Sci'].fillna(df['Sci'].mean())
 df['Att'] = df['Att'].fillna(df['Att'].mean())
-df['Math'] = df.Math.clip(upper=100)
 
-df['Att'] = df['Att'] / 10
+# Handling inconsistencies
+df['Math'] = df['Math'].clip(upper=100)
+df['Sci'] = df['Sci'].clip(upper=100)
+df['Att'] = df['Att'].clip(upper=100)
+
+# Outlier Detection and Handling using IQR
+for col in ['Math', 'Sci', 'Att']:
+
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+
+    IQR = Q3 - Q1
+
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+
+    df[col] = np.where(df[col] > upper, upper, df[col])
+    df[col] = np.where(df[col] < lower, lower, df[col])
+
+# Data Transformation (Scaling)
 df['Math'] = df['Math'] / 10
 df['Sci'] = df['Sci'] / 10
+df['Att'] = df['Att'] / 10
 
-print("after : ",df)
+print("\nCleaned and Transformed Dataset:\n")
+print(df)
